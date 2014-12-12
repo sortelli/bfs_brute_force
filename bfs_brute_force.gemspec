@@ -8,8 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = BfsBruteForce::VERSION
   spec.authors       = ["Joe Sortelli"]
   spec.email         = ["joe@sortelli.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = "Do a breadth first brute force search for solutions to puzzles"
   spec.homepage      = ""
   spec.license       = "MIT"
 
