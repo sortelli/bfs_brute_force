@@ -2,6 +2,12 @@ require "bfs_brute_force/version"
 require "set"
 
 module BfsBruteForce
+  class NoSolution < StandardError
+    def initialize
+      super("There are no more states to analyze")
+    end
+  end
+
   class State
     attr_reader :context, :moves
 
@@ -57,7 +63,7 @@ module BfsBruteForce
 
         states.push(states.last.flat_map {|s| s.next_states})
 
-        raise "There are no more states to analyze" if states.last.size == 0
+        raise NoSolution if states.last.size == 0
       end
     end
   end
