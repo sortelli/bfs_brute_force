@@ -25,12 +25,12 @@ Or install it yourself as:
 
 ## Usage
 
-Your puzzle must be represented by a subclass of ```BfsBruteForce::Context```.
-Each instance of your Context subclass must:
+Your puzzle must be represented by a subclass of ```BfsBruteForce::State```.
+Each instance of your State subclass must:
 
 1. Store the current state of the puzzle (instance attributes)
 2. Determine if the state is a win condition of the puzzle (```solved?```)
-3. Provide a generator for reaching all possible next states (```next_moves```)
+3. Provide a generator for reaching all possible next states (```next_states```)
 
 ### Example Puzzle
 
@@ -39,10 +39,10 @@ ending number, and you can only perform one of three addition
 operations (adding one, ten, or one hundred).
 
 To use ```BfsBruteForce``` you will create your
-```BfsBruteForce::Context``` subclass as follows:
+```BfsBruteForce::State``` subclass as follows:
     require 'bfs_brute_force'
 
-    class AdditionPuzzleContext < BfsBruteForce::Context
+    class AdditionPuzzleState < BfsBruteForce::State
       attr_reader :value
 
       def initialize(start, final)
@@ -59,38 +59,38 @@ To use ```BfsBruteForce``` you will create your
         "<#{self.class} puzzle from #{@start} to #{@final}>"
       end
 
-      def next_moves(already_seen)
+      def next_states(already_seen)
         return if @value > @final
 
         [1, 10, 100].each do |n|
           new_value = @value + n
           if already_seen.add?(new_value)
-            yield "Add #{n}", AdditionPuzzleContext.new(new_value, @final)
+            yield "Add #{n}", AdditionPuzzleState.new(new_value, @final)
           end
         end
       end
     end
 
-Each instance of ```AdditionPuzzleContext``` is immutable. The
-```next_moves``` method takes a single argument, which is a ```Set```
+Each instance of ```AdditionPuzzleState``` is immutable. The
+```next_states``` method takes a single argument, which is a ```Set```
 instance, that can be optionally used by your implementation to
 record states that have already been evaluated, as any previously
 evaluated state is already known to not be a solution.
 
-Inside of ```next_moves``` you should yield two arguments for every
+Inside of ```next_states``` you should yield two arguments for every
 valid next state of the puzzle:
 
 1. A string, naming the move required to get to the next state
-2. The next state, as a new instance of your ```BfsBruteForce::Context``` class.
+2. The next state, as a new instance of your ```BfsBruteForce::State``` class.
 
-Now that you have your ```BfsBruteForce::Context``` class, you can
+Now that you have your ```BfsBruteForce::State``` class, you can
 initialize it with your starting puzzle state, and pass it to
 ```BfsBruteForce::Solver#solve```, which will return an object that
 has a ```moves``` method, which returns an array of the move
-names yielded by your ```next_moves``` method:
+names yielded by your ```next_states``` method:
 
     solver   = BfsBruteForce::Solver.new
-    solution = solver.solve(AdditionPuzzleContext.new(0, 42))
+    solution = solver.solve(AdditionPuzzleState.new(0, 42))
 
     solution.moves.each_with_index do |move, index|
       puts "Move %02d) %s" % [index + 1, move]

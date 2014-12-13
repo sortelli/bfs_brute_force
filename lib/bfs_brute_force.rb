@@ -8,74 +8,74 @@ module BfsBruteForce
     end
   end
 
-  class State
-    attr_reader :context, :moves
+  class Context
+    attr_reader :state, :moves
 
-    def initialize(context, moves = [], already_seen = Set.new)
-      @context      = context
-      @moves        = moves
+    def initialize(state, already_seen = Set.new, moves = [])
+      @state        = state
       @already_seen = already_seen
+      @moves        = moves
     end
 
     def solved?
-      @context.solved?
+      @state.solved?
     end
 
-    def next_states
-      @context.next_moves(@already_seen) do |next_move, next_context|
-        yield State.new(next_context, @moves + [next_move], @already_seen)
+    def next_contexts
+      @state.next_states(@already_seen) do |next_move, next_state|
+        yield Context.new(next_state, @already_seen, @moves + [next_move])
       end
     end
   end
 
-  class Context
+  class State
     def solved?
       raise NotImplementedError, "solved? is not implemented yet"
     end
 
-    def next_moves(already_seen)
-      raise NotImplementedError, "next_moves is not implemented yet"
+    def next_states(already_seen)
+      raise NotImplementedError, "next_states is not implemented yet"
     end
   end
 
   class Solver
-    def solve(initial_context, status = $stdout)
-      status << "Looking for solution for:\n#{initial_context}\n\n"
+    def solve(initial_state, status = $stdout)
+      status << "Looking for solution for:\n#{initial_state}\n\n"
 
-      initial_state = State.new(initial_context)
+      initial_context = Context.new(initial_state)
 
-      if initial_state.solved?
+      if initial_context.solved?
         status << "Good news, its already solved\n"
-        return initial_state
+        return initial_context
       end
 
-      tries  = 0
-      states = [initial_state]
+      tries    = 0
+      contexts = [initial_context]
 
-      until states.empty?
+      until contexts.empty?
         status << ("Checking for solutions that take %4d moves ... " % [
-          states.first.moves.size + 1
+          contexts.first.moves.size + 1
         ])
 
-        new_states = []
+        new_contexts = []
 
-        states.each do |current_state|
-          current_state.next_states do |state|
+        contexts.each do |current_context|
+          current_context.next_contexts do |context|
             tries += 1
 
-            if state.solved?
+            if context.solved?
               status << "solved in #{tries} tries\n\nMoves:\n"
-              state.moves.each {|m| status << "  #{m}\n"}
-              status << "\nFinal context:\n #{state.context}\n"
-              return state
+              context.moves.each {|m| status << "  #{m}\n"}
+              status << "\nFinal state:\n #{context.state}\n"
+              return context
             end
 
-            new_states << state
+            new_contexts << context
           end
         end
 
-        states = new_states
-        status << ("none in %9d new contexts\n" % states.size)
+        contexts = new_contexts
+        status << ("none in %9d new states\n" % contexts.size)
       end
 
       raise NoSolution.new(tries)
