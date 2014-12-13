@@ -45,7 +45,7 @@ module BfsBruteForce
       initial_state = State.new(initial_context)
 
       if initial_state.solved?
-        status << "Good news, its already solved"
+        status << "Good news, its already solved\n"
         return initial_state
       end
 
