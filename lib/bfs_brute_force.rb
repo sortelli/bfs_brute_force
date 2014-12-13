@@ -51,7 +51,7 @@ module BfsBruteForce
             status << "\nSolved:\n\n"
             state.moves.each {|m| status << "  #{m}\n"}
             status << "\n#{state.context}\n"
-            exit 0
+            return state
           end
         end
 
