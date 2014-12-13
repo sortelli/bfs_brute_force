@@ -75,7 +75,7 @@ module BfsBruteForce
         end
 
         states = new_states
-        status << "none in #{states.size} new contexts\n"
+        status << ("none in %9d new contexts\n" % states.size)
       end
 
       raise NoSolution.new(tries)
