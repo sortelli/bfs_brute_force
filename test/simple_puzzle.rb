@@ -77,7 +77,7 @@ class TestSimplePuzzle < Minitest::Unit::TestCase
 
     refute context.solved?, "Not already solved"
 
-    state = solver.solve context, []
+    state = solver.solve context
 
     assert_instance_of(BfsBruteForce::State, state)
     assert_instance_of(type, state.context)

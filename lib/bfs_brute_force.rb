@@ -3,8 +3,8 @@ require "set"
 
 module BfsBruteForce
   class NoSolution < StandardError
-    def initialize
-      super("There are no more states to analyze")
+    def initialize(tries)
+      super("No solution in #{tries} tries. There are no more states to analyze")
     end
   end
 
@@ -22,11 +22,9 @@ module BfsBruteForce
     end
 
     def next_states
-      list = []
       @context.next_moves(@already_seen) do |next_move, next_context|
-        list << State.new(next_context, @moves + [next_move], @already_seen)
+        yield State.new(next_context, @moves + [next_move], @already_seen)
       end
-      list
     end
   end
 
@@ -44,27 +42,43 @@ module BfsBruteForce
     def solve(initial_context, status = $stdout)
       status << "Looking for solution for:\n#{initial_context}\n\n"
 
-      states = [[State.new(initial_context)]]
+      initial_state = State.new(initial_context)
 
-      loop do
-        status << ("Checking for solutions that take %4d moves. %7d new contexts\n" % [
-          states.length - 1,
-          states.last.length
+      if initial_state.solved?
+        status << "Good news, its already solved"
+        return initial_state
+      end
+
+      tries  = 0
+      states = [initial_state]
+
+      until states.empty?
+        status << ("Checking for solutions that take %4d moves ... " % [
+          states.first.moves.size + 1
         ])
 
-        states.last.each do |state|
-          if state.solved?
-            status << "\nSolved:\n\n"
-            state.moves.each {|m| status << "  #{m}\n"}
-            status << "\n#{state.context}\n"
-            return state
+        new_states = []
+
+        states.each do |current_state|
+          current_state.next_states do |state|
+            tries += 1
+
+            if state.solved?
+              status << "solved in #{tries} tries\n\nMoves:\n"
+              state.moves.each {|m| status << "  #{m}\n"}
+              status << "\nFinal context:\n #{state.context}\n"
+              return state
+            end
+
+            new_states << state
           end
         end
 
-        states.push(states.last.flat_map {|s| s.next_states})
-
-        raise NoSolution if states.last.size == 0
+        states = new_states
+        status << "none in #{states.size} new contexts\n"
       end
+
+      raise NoSolution.new(tries)
     end
   end
 end
