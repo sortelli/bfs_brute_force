@@ -35,22 +35,22 @@ module BfsBruteForce
   end
 
   class Solver
-    def solve(initial_context)
-      puts "Looking for solution for:\n#{initial_context}\n\n"
+    def solve(initial_context, status = $stdout)
+      status << "Looking for solution for:\n#{initial_context}\n\n"
 
       states = [[State.new(initial_context)]]
 
       loop do
-        puts("Checking for solutions that take %4d moves. %7d new contexts" % [
+        status << ("Checking for solutions that take %4d moves. %7d new contexts\n" % [
           states.length - 1,
           states.last.length
         ])
 
         states.last.each do |state|
           if state.solved?
-            puts "\nSolved:\n"
-            puts state.moves.map {|m| "  #{m}"}
-            puts "\n#{state.context}"
+            status << "\nSolved:\n\n"
+            state.moves.each {|m| status << "  #{m}\n"}
+            status << "\n#{state.context}\n"
             exit 0
           end
         end
