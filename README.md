@@ -34,7 +34,7 @@ Each instance of your State subclass must:
 2. Determine if the state is a win condition of the puzzle (```solved?```)
 3. Provide a generator for reaching all possible next states (```next_states```)
 
-### Example Puzzle
+### Simple Example Puzzle
 
 Imagine a simple puzzle where you are given a starting number, an
 ending number, and you can only perform one of three addition
@@ -97,6 +97,26 @@ names yielded by your ```next_states``` method:
     solution.moves.each_with_index do |move, index|
       puts "Move %02d) %s" % [index + 1, move]
     end
+
+### Complex Example Puzzle
+
+Swap black and white bishops, following standard chess movement rules.
+This is the "four bishops" puzzle from an old video game, The 7th Guest.
+
+Inital Board layout:
+
+      +----+----+----+----+----+
+    4 | B4 |    |    |    | W4 |
+      +----+----+----+----+----+
+    3 | B3 |    |    |    | W3 |
+      +----+----+----+----+----+
+    2 | B2 |    |    |    | W2 |
+      +----+----+----+----+----+
+    1 | B1 |    |    |    | W1 |
+      +----+----+----+----+----+
+        a    b    c    d    e
+
+See [example/four_bishops.rb](example/four_bishops.rb) for a working solution.
 
 ## License
 
