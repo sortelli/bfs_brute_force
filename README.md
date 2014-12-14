@@ -123,21 +123,28 @@ See [example/two_knights.rb](example/two_knights.rb) for a working solution.
 
 ### Four Bishops Example Puzzle
 
-Swap black and white bishops, following standard chess movement rules.
+Swap black and white bishops, following standard chess movement
+rules, except that bishops may not move to a square that would allow
+them to be captured by an enemy bishop (they may not put themselves
+in "check").
+
 This is the "four bishops" puzzle from an old video game, The 7th Guest.
 
-Inital Board layout:
+Initial Board layout:
 
       +----+----+----+----+----+
-    4 | B4 |    |    |    | W4 |
+    4 | BB |    |    |    | WB |
       +----+----+----+----+----+
-    3 | B3 |    |    |    | W3 |
+    3 | BB |    |    |    | WB |
       +----+----+----+----+----+
-    2 | B2 |    |    |    | W2 |
+    2 | BB |    |    |    | WB |
       +----+----+----+----+----+
-    1 | B1 |    |    |    | W1 |
+    1 | BB |    |    |    | WB |
       +----+----+----+----+----+
         a    b    c    d    e
+
+    BB = Black Bishop
+    WB = White Bishop
 
 See [example/four_bishops.rb](example/four_bishops.rb) for a working solution.
 
