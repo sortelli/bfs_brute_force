@@ -98,7 +98,30 @@ names yielded by your ```next_states``` method:
       puts "Move %02d) %s" % [index + 1, move]
     end
 
-### Complex Example Puzzle
+### Two Knights Example Puzzle
+
+Swap the white and black knights, using standard chess moves.
+This is the "two knights" puzzle from an old video game, The 11th Hour.
+
+Initial board layout:
+
+      +----+
+    4 | BK |
+      +----+----+----+----+
+    3 |    |    |    | WK |
+      +----+----+----+----+
+    2 | BK | WK |    |
+      +----+----+----+
+    1 |    |    |
+      +----+----+
+        a    b    c    d
+
+    BK = Black Knight
+    WK = White Knight
+
+See [example/two_knights.rb](example/two_knights.rb) for a working solution.
+
+### Four Bishops Example Puzzle
 
 Swap black and white bishops, following standard chess movement rules.
 This is the "four bishops" puzzle from an old video game, The 7th Guest.
