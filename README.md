@@ -34,41 +34,47 @@ Each instance of your State subclass must:
 2. Determine if the state is a win condition of the puzzle (```solved?```)
 3. Provide a generator for reaching all possible next states (```next_states```)
 
-### Simple Example Puzzle
+### Simple Addition Example Puzzle
 
-Imagine a simple puzzle where you are given a starting number, an
-ending number, and you can only perform one of three addition
-operations (adding one, ten, or one hundred).
+Using the moves "Add 10" and "Add 1," find the shortest number
+of moves from a starting number to a final number.
 
 To use ```BfsBruteForce``` you will create your
 ```BfsBruteForce::State``` subclass as follows:
-    require 'bfs_brute_force'
 
     class AdditionPuzzleState < BfsBruteForce::State
-      attr_reader :value
-
-      def initialize(start, final)
-        @start = start
-        @value = start
+      def initialize(value, final)
+        @value = value
         @final = final
       end
-
+  
+      # (see BfsBruteForce::State.solved?)
       def solved?
         @value == @final
       end
-
-      def to_s
-        "<#{self.class} puzzle from #{@start} to #{@final}>"
-      end
-
+  
+      # Call yield for every next state in your puzzle
+      # This puzzle has two legal moves from every state: Add 10, and Add 1
+      #
+      # (see BfsBruteForce::State.next_states)
       def next_states(already_seen)
+        # If there are no more available states to analyze,
+        # {BfsBruteForce::Solver#solve} will throw a {BfsBruteForce::NoSolution}
+        # exception.
         return if @value > @final
-
-        [1, 10, 100].each do |n|
-          new_value = @value + n
-          if already_seen.add?(new_value)
-            yield "Add #{n}", AdditionPuzzleState.new(new_value, @final)
-          end
+  
+        # already_seen is a set passed to every call of next_states.
+        # You can use this set to record which states you have previously
+        # visited, from a shorter path, avoiding having to visit that
+        # same state again.
+        #
+        # Set#add?(x) will return nil if x is already in the set
+        if already_seen.add?(@value + 10)
+          yield "Add 10", AdditionPuzzleState.new(@value + 10, @final)
+        end
+  
+        if already_seen.add?(@value + 1)
+          yield "Add 1", AdditionPuzzleState.new(@value + 1, @final)
         end
       end
     end
@@ -82,7 +88,7 @@ evaluated state is already known to not be a solution.
 Inside of ```next_states``` you should yield two arguments for every
 valid next state of the puzzle:
 
-1. A string, naming the move required to get to the next state
+1. A user defined string, naming the move required to get to the next state
 2. The next state, as a new instance of your ```BfsBruteForce::State``` class.
 
 Now that you have your ```BfsBruteForce::State``` class, you can
@@ -91,12 +97,26 @@ initialize it with your starting puzzle state, and pass it to
 has a ```moves``` method, which returns an array of the move
 names yielded by your ```next_states``` method:
 
-    solver   = BfsBruteForce::Solver.new
-    solution = solver.solve(AdditionPuzzleState.new(0, 42))
+    # Find shortest path from 0 to 42
+    initial_state = AdditionPuzzleState.new 0, 42
 
-    solution.moves.each_with_index do |move, index|
-      puts "Move %02d) %s" % [index + 1, move]
+    solver = BfsBruteForce::Solver.new
+    moves  = solver.solve(initial_state).moves
+
+    moves.each_with_index do |move, index|
+      puts "Move %d) %s" % [index + 1, move]
     end
+
+Running this code will produce the following output:
+
+    Move 1) Add 10
+    Move 2) Add 10
+    Move 3) Add 10
+    Move 4) Add 10
+    Move 5) Add 1
+    Move 6) Add 1
+
+See [example/simple_addition.rb](example/simple_addition.rb) for the full solution.
 
 ### Two Knights Example Puzzle
 
