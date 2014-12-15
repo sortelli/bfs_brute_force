@@ -15,15 +15,21 @@ initial state to solution state.
 
 Add this line to your application's Gemfile:
 
-    gem 'bfs_brute_force'
+```ruby
+gem 'bfs_brute_force'
+```
 
 And then execute:
 
-    $ bundle
+```bash
+% bundle
+```
 
 Or install it yourself as:
 
-    $ gem install bfs_brute_force
+```bash
+% gem install bfs_brute_force
+```
 
 ## Usage
 
@@ -42,42 +48,44 @@ of moves from a starting number to a final number.
 To use ```BfsBruteForce``` you will create your
 ```BfsBruteForce::State``` subclass as follows:
 
-    class AdditionPuzzleState < BfsBruteForce::State
-      def initialize(value, final)
-        @value = value
-        @final = final
-      end
-  
-      # (see BfsBruteForce::State.solved?)
-      def solved?
-        @value == @final
-      end
-  
-      # Call yield for every next state in your puzzle
-      # This puzzle has two legal moves from every state: Add 10, and Add 1
-      #
-      # (see BfsBruteForce::State.next_states)
-      def next_states(already_seen)
-        # If there are no more available states to analyze,
-        # {BfsBruteForce::Solver#solve} will throw a {BfsBruteForce::NoSolution}
-        # exception.
-        return if @value > @final
-  
-        # already_seen is a set passed to every call of next_states.
-        # You can use this set to record which states you have previously
-        # visited, from a shorter path, avoiding having to visit that
-        # same state again.
-        #
-        # Set#add?(x) will return nil if x is already in the set
-        if already_seen.add?(@value + 10)
-          yield "Add 10", AdditionPuzzleState.new(@value + 10, @final)
-        end
-  
-        if already_seen.add?(@value + 1)
-          yield "Add 1", AdditionPuzzleState.new(@value + 1, @final)
-        end
-      end
+```ruby
+class AdditionPuzzleState < BfsBruteForce::State
+  def initialize(value, final)
+    @value = value
+    @final = final
+  end
+
+  # (see BfsBruteForce::State.solved?)
+  def solved?
+    @value == @final
+  end
+
+  # Call yield for every next state in your puzzle
+  # This puzzle has two legal moves from every state: Add 10, and Add 1
+  #
+  # (see BfsBruteForce::State.next_states)
+  def next_states(already_seen)
+    # If there are no more available states to analyze,
+    # {BfsBruteForce::Solver#solve} will throw a {BfsBruteForce::NoSolution}
+    # exception.
+    return if @value > @final
+
+    # already_seen is a set passed to every call of next_states.
+    # You can use this set to record which states you have previously
+    # visited, from a shorter path, avoiding having to visit that
+    # same state again.
+    #
+    # Set#add?(x) will return nil if x is already in the set
+    if already_seen.add?(@value + 10)
+      yield "Add 10", AdditionPuzzleState.new(@value + 10, @final)
     end
+
+    if already_seen.add?(@value + 1)
+      yield "Add 1", AdditionPuzzleState.new(@value + 1, @final)
+    end
+  end
+end
+```
 
 Each instance of ```AdditionPuzzleState``` is immutable. The
 ```next_states``` method takes a single argument, which is a ```Set```
@@ -97,15 +105,17 @@ initialize it with your starting puzzle state, and pass it to
 has a ```moves``` method, which returns an array of the move
 names yielded by your ```next_states``` method:
 
-    # Find shortest path from 0 to 42
-    initial_state = AdditionPuzzleState.new 0, 42
+```ruby
+# Find shortest path from 0 to 42
+initial_state = AdditionPuzzleState.new 0, 42
 
-    solver = BfsBruteForce::Solver.new
-    moves  = solver.solve(initial_state).moves
+solver = BfsBruteForce::Solver.new
+moves  = solver.solve(initial_state).moves
 
-    moves.each_with_index do |move, index|
-      puts "Move %d) %s" % [index + 1, move]
-    end
+moves.each_with_index do |move, index|
+  puts "Move %d) %s" % [index + 1, move]
+end
+```
 
 Running this code will produce the following output:
 
