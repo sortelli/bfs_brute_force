@@ -1,5 +1,4 @@
-require "minitest/autorun"
-require "bfs_brute_force"
+require_relative "test_helper"
 
 class AlreadySolvedState < BfsBruteForce::State
   def solved?
