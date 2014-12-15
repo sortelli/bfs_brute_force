@@ -1,6 +1,7 @@
 # BfsBruteForce
 
-[![Gem Version](https://badge.fury.io/rb/bfs_brute_force.png)](http://badge.fury.io/rb/bfs_brute_force)
+[![Gem Version](https://badge.fury.io/rb/bfs_brute_force.svg)](http://badge.fury.io/rb/bfs_brute_force)
+[![Build Status](https://travis-ci.org/sortelli/bfs_brute_force.svg?branch=develop)](https://travis-ci.org/sortelli/bfs_brute_force)
 
 Lazy breadth first brute force search for solutions to puzzles.
 
