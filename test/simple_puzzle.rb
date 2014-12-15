@@ -46,7 +46,7 @@ class SlightlyHarderPuzzleState < SimplePuzzleState
   end
 end
 
-class TestSimplePuzzle < Minitest::Unit::TestCase
+class TestSimplePuzzle < Minitest::Test
   def test_simple_puzzle
     [
       [0, 42,  ["Add 1"]  * 2 + ["Add 10"] * 4],

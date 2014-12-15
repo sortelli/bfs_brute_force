@@ -13,7 +13,7 @@ class BrokenState < BfsBruteForce::State
   end
 end
 
-class TestBasic < Minitest::Unit::TestCase
+class TestBasic < Minitest::Test
   def test_module_exists
     mod_key = :BfsBruteForce
     assert Kernel.const_defined?(mod_key), "Module #{mod_key} missing"
