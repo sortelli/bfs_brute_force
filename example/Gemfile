@@ -1,0 +1,6 @@
+source "https://rubygems.org"
+
+# Use gem from the source code in this git repo
+gem 'bfs_brute_force',
+    :git    => File.join(File.dirname(__FILE__), '..'),
+    :branch => 'HEAD'
