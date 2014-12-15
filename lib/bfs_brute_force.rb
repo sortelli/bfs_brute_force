@@ -100,7 +100,7 @@ module BfsBruteForce
     #
     # @raise [NoSolution] No solution is found
     # @return [Context] Solved Context object has the final {State} and list of moves
-    def solve(initial_state, status = $stdout)
+    def solve(initial_state, status = [])
       status << "Looking for solution for:\n#{initial_state}\n\n"
 
       initial_context = Context.new(initial_state)
