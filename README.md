@@ -2,6 +2,7 @@
 
 [![Gem Version](https://badge.fury.io/rb/bfs_brute_force.svg)](http://badge.fury.io/rb/bfs_brute_force)
 [![Build Status](https://travis-ci.org/sortelli/bfs_brute_force.svg?branch=develop)](https://travis-ci.org/sortelli/bfs_brute_force)
+[![Dependency Status](https://gemnasium.com/sortelli/bfs_brute_force.svg)](https://gemnasium.com/sortelli/bfs_brute_force)
 
 Lazy breadth first brute force search for solutions to puzzles.
 
