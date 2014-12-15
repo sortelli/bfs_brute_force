@@ -7,9 +7,6 @@ class AlreadySolvedState < BfsBruteForce::State
 end
 
 class BrokenState < BfsBruteForce::State
-  def solved?
-    false
-  end
 end
 
 class TestBasic < Minitest::Test
@@ -30,7 +27,7 @@ class TestBasic < Minitest::Test
     assert_raises(NotImplementedError) {state.next_states(nil)}
     assert state.solved?
 
-    solver.solve state, []
+    solver.solve state
   end
 
   def test_broken
@@ -38,8 +35,7 @@ class TestBasic < Minitest::Test
     solver = BfsBruteForce::Solver.new
 
     assert_raises(NotImplementedError) {state.next_states(nil)}
-    refute state.solved?
-
-    assert_raises(NotImplementedError) { solver.solve(state, []) }
+    assert_raises(NotImplementedError) {state.solved?}
+    assert_raises(NotImplementedError) { solver.solve(state) }
   end
 end
